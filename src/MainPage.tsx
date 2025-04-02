@@ -97,10 +97,20 @@ const MainPage: React.FC = () => {
             </div>
             <div className="main" >
                 <div className="introduction" id="introduction" ref={el => sectionRefs.current[0] = el}>
-                    Passionate about designing innovative tech solutions, I enjoy diving into software architecture and data flow, ensuring every component works seamlessly together. My journey in technology has ranged from developing embedded systems to creating comprehensive web applications, thriving on turning complex challenges into elegant solutions. Currently, the exploration of cloud computing and data engineering excites me, and I am eager to contribute to cutting-edge projects that push the boundaries of what's possible in tech.
+                    Passionate about designing innovative tech solutions, I enjoy diving into software architecture and data flow, ensuring every component works seamlessly together. My journey in technology has ranged from developing embedded systems to creating comprehensive web applications, thriving on turning complex challenges into elegant solutions. Currently, the exploration of cloud computing and formal verification excites me, and I am eager to contribute to cutting-edge projects that push the boundaries of what's possible in tech.
                 </div>
                 <br />
                 <div className='workexperience' id='workexperience' ref={el => sectionRefs.current[1] = el}>
+                    <div className='experience'>
+                        <Subdiv info={{
+                                from: '10/2024',
+                                to: '03/2025',
+                                position: 'Intern',
+                                company: 'Rescale Consulting GmbH',
+                                link: 'https://rescale.ch/',
+                                text: "I developed scripts using NestJS to efficiently scrape and extract data from the web. Additionally, I configured and optimized MongoDB databases to store and structure the collected data meaningfully, ensuring seamless retrieval and usability."
+                            }} ></Subdiv>
+                    </div>
                     <div className='experience'>
                         <Subdiv info={{
                                 from: '06/2023',
