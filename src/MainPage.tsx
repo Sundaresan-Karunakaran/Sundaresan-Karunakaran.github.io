@@ -79,7 +79,7 @@ const MainPage: React.FC = () => {
                     <h3>Software Engineer</h3>
                     <h5>With a passion for anything computer</h5>
                 </div>
-                <img className="nav-link" src='src/IMG_20240808_111841_731.jpg' alt='Sundaresan Karunakaran Photo' style={{borderRadius:'30%', paddingTop:'10%'}} width="300" height="400"/>
+                <img className="nav-link" src='public/IMG_20240808_111841_731.jpg' alt='Sundaresan Karunakaran Photo' style={{borderRadius:'30%', paddingTop:'10%'}} width="300" height="400"/>
                 <div style={{display:'flex',flexDirection:'column', padding:'10%'}}>
                     <a href="#introduction"  className="nav-link">About me</a>
                     <a href="#workexperience" className="nav-link">Work Experience</a>
@@ -105,7 +105,7 @@ const MainPage: React.FC = () => {
                         <Subdiv info={{
                                 from: '10/2024',
                                 to: '03/2025',
-                                position: 'Intern',
+                                position: 'Intern ',
                                 company: 'Rescale Consulting GmbH',
                                 link: 'https://rescale.ch/',
                                 text: "I developed scripts using NestJS to efficiently scrape and extract data from the web. Additionally, I configured and optimized MongoDB databases to store and structure the collected data meaningfully, ensuring seamless retrieval and usability."
