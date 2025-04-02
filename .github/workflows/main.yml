@@ -1,5 +1,8 @@
 name: Deploy to GitHub Pages
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 on:
   push:
     branches:
@@ -27,3 +30,4 @@ jobs:
         with:
           branch: gh-pages
           folder: dist 
+          token: ${{ secrets.GITHUB_TOKEN }}
