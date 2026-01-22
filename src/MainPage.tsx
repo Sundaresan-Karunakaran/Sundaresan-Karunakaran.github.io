@@ -81,10 +81,12 @@ const MainPage: React.FC = () => {
                 </div>
                 <img className="nav-link" src='/IMG_20240808_111841_731.jpg' alt='Sundaresan Karunakaran Photo' style={{borderRadius:'30%', paddingTop:'10%'}} width="300" height="400"/>
                 <div style={{display:'flex',flexDirection:'column', padding:'10%'}}>
-                    <a href="#introduction"  className="nav-link">About me</a>
-                    <a href="#workexperience" className="nav-link">Work Experience</a>
-                    <a href="#education" className="nav-link">Education</a>
-                    <a href="#skills"  className="nav-link">Skills</a>
+                    <a href="#introduction"  className="nav-link">
+                        <span>About me</span>
+                    </a>
+                    <a href="#workexperience" className="nav-link"><span>Work Experience</span></a>
+                    <a href="#education" className="nav-link"><span>Education</span></a>
+                    <a href="#skills"  className="nav-link"><span>Skills</span></a>
 
                 </div>
                 <div style={{display:'flex',width:'30%',bottom:"50px",justifyContent:'space-evenly'}}>
@@ -99,7 +101,7 @@ const MainPage: React.FC = () => {
                 <div className="introduction" id="introduction" ref={el => sectionRefs.current[0] = el}>
                     Passionate about designing innovative tech solutions, I enjoy diving into software architecture and data flow, ensuring every component works seamlessly together. My journey in technology has ranged from developing embedded systems to creating comprehensive web applications, thriving on turning complex challenges into elegant solutions. Currently, the exploration of cloud computing and formal verification excites me, and I am eager to contribute to cutting-edge projects that push the boundaries of what's possible in tech.
                 </div>
-                <br />
+                <hr style={{width:"100%"}}/>
                 <div className='workexperience' id='workexperience' ref={el => sectionRefs.current[1] = el}>
                     <div className='experience'>
                         <Subdiv info={{
@@ -132,7 +134,7 @@ const MainPage: React.FC = () => {
                             }} ></Subdiv>
                     </div>
                 </div>
-                <br />
+                <hr style={{width:"100%"}}/>
                 <div className='education' id='education' ref={el => sectionRefs.current[2] = el}>
                     <div className='experience'>
                         <Subdiv info={{
@@ -155,7 +157,7 @@ const MainPage: React.FC = () => {
                             }} ></Subdiv>
                     </div>
                 </div>
-                <br />
+                <hr style={{width:"100%"}}/>
                 <div className='skills' id='skills' ref={el => sectionRefs.current[3] = el}
                 style={{display:'flex',flexDirection: 'row',alignItems: 'center',flexWrap: 'wrap',gap: '23px', justifyContent:'space-evenly'}}>
                     <Skills text='React'></Skills>

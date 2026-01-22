@@ -141,6 +141,13 @@ code, pre {
   /* padding: 8px; */
   transition: color 0.3s ease, transform 0.3s ease;
   transform-origin: left;
+  overflow: hidden;
+}
+
+.nav-link span{
+  display: inline-block;
+  transition: transform 0.3s ease, color 0.3s ease;
+  transform-origin: left center;
 }
 
 .nav-link.active {
@@ -148,10 +155,11 @@ code, pre {
   font-weight: bold;
 }
 
-.nav-link:hover{
+.nav-link:hover span{
   color: #f50057;
   transform: scale(1.2)
 }
+
 
 @media screen and (max-width: 800px) {
   .sidebar {
