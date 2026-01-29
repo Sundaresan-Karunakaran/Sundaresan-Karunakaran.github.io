@@ -1,6 +1,5 @@
 import './App.css'
 import MainPage from './MainPage'
-import Spotlight from './Spotlight'
 
 import { HashRouter, Routes, Route } from 'react-router-dom'
 import { BlogPost } from './BlogPost'
