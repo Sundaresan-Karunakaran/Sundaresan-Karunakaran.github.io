@@ -87,6 +87,10 @@ const MainPage: React.FC = () => {
                     <a href="#workexperience" className="nav-link"><span>Work Experience</span></a>
                     <a href="#education" className="nav-link"><span>Education</span></a>
                     <a href="#skills"  className="nav-link"><span>Skills</span></a>
+                    {/* <a href='#blogs' className='nav-link'><span>Blogs</span></a> */}
+
+                    <hr style={{width:"100%"}}/>
+                    <a href='/resume.pdf' className="nav-link" target="_blank"><span>Resume</span></a>
 
                 </div>
                 <div style={{display:'flex',width:'30%',bottom:"50px",justifyContent:'space-evenly'}}>
@@ -174,6 +178,10 @@ const MainPage: React.FC = () => {
                     <Skills text='Bash/Shell'></Skills>
                     <Skills text='Git'></Skills>
                 </div>
+                <hr style={{width:"100%"}}/>
+                {/* <div className='blogs' id='blogs' ref={el => sectionRefs.current[4] = el}>
+                    Blogs
+                </div> */}
            </div>
         </div>
 
