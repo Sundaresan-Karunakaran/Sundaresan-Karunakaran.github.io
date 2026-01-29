@@ -188,3 +188,42 @@ code, pre {
     transform: scale(1.1)
   }
 }
+
+
+/* ... existing styles ... */
+
+.blog-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.blog-list-item {
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.blog-list-item::before {
+  content: "•";
+  color: #f50057;
+  font-size: 1.5em;
+  position: absolute;
+  left: 0;
+  line-height: 1.2;
+}
+
+.blog-link {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-block;
+  transform-origin: left center;
+}
+
+.blog-link:hover {
+  color: #f50057;
+  transform: scale(1.2);
+  transform-origin: left center;
+}

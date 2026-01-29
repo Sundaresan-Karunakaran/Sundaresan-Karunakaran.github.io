@@ -1,16 +1,18 @@
-// import { useState } from 'react'
-// import reactLogo from './assets/react.svg'
-// import viteLogo from '/vite.svg'
 import './App.css'
-import MainPage from './MainPage';
-import Spotlight from './Spotlight';
-function App() {
+import MainPage from './MainPage'
+import Spotlight from './Spotlight'
 
+import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BlogPost } from './BlogPost'
+
+function App() {
   return (
-    <div>
-      <Spotlight />
-      <MainPage />
-    </div>
+    <HashRouter>
+      <Routes>
+        <Route path="/" element={<MainPage />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
+      </Routes>
+    </HashRouter>
   )
 }
 

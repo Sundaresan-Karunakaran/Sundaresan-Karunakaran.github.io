@@ -1,10 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef , useState} from 'react';
 import Subdiv from './SubDiv';
 import Skills from './Skills'
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import MailIcon from '@mui/icons-material/Mail';
-    
+import { loadPosts } from './lib/loadPosts';
+import { Link } from 'react-router-dom';
+import { parsePost } from './lib/parsePost';
+
+
+type BlogPostPreview = {
+    slug: string
+    title: string
+    date: string
+}
+
 const MainPage: React.FC = () => {
 
     const sectionRefs = useRef<(HTMLElement | null)[]>([]);
@@ -16,7 +26,7 @@ const MainPage: React.FC = () => {
             if (targetId) {
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
-                    const offset = 50; // Adjust the offset as needed
+                    const offset = 50; 
                     const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
                     const offsetPosition = elementPosition - offset;
                     window.scrollTo({
@@ -32,7 +42,6 @@ const MainPage: React.FC = () => {
             link.addEventListener('click', handleScroll);
         });
 
-        // Cleanup event listeners on component unmount
         return () => {
             links.forEach(link => {
                 link.removeEventListener('click', handleScroll);
@@ -41,9 +50,9 @@ const MainPage: React.FC = () => {
     }, []);
     useEffect(() => {
         const options = {
-            root: null, // relative to the viewport
-            rootMargin: '-50px', // margin around the root
-            threshold: 0.5, // percentage of the target's visibility
+            root: null, 
+            rootMargin: '-50px', 
+            threshold: 0.5, 
         };
 
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
@@ -70,6 +79,34 @@ const MainPage: React.FC = () => {
             }
         };
     }, []);
+
+    const [posts, setPosts] = useState<BlogPostPreview[]>([])
+
+
+      
+      
+    useEffect(() => {
+        async function fetchPosts() {
+          const rawPosts = await loadPosts()
+    
+          const parsed = rawPosts.filter(post => post.slug).map(post => {
+            const parsed = parsePost(post.raw)
+            console.log("HELLO")
+            console.log(parsed.title)
+            return {
+              slug: post.slug!,
+              title: parsed.title,
+              date: parsed.date
+            }
+          })
+    
+          setPosts(parsed)
+        }
+    
+        fetchPosts()
+      }, [])
+
+      
     return (
         <>
         <div className="wrapper">
@@ -87,7 +124,7 @@ const MainPage: React.FC = () => {
                     <a href="#workexperience" className="nav-link"><span>Work Experience</span></a>
                     <a href="#education" className="nav-link"><span>Education</span></a>
                     <a href="#skills"  className="nav-link"><span>Skills</span></a>
-                    {/* <a href='#blogs' className='nav-link'><span>Blogs</span></a> */}
+                    <a href='#blogs' className='nav-link'><span>Blogs</span></a>
 
                     <hr style={{width:"100%"}}/>
                     <a href='/resume.pdf' className="nav-link" target="_blank"><span>Resume</span></a>
@@ -179,9 +216,24 @@ const MainPage: React.FC = () => {
                     <Skills text='Git'></Skills>
                 </div>
                 <hr style={{width:"100%"}}/>
-                {/* <div className='blogs' id='blogs' ref={el => sectionRefs.current[4] = el}>
-                    Blogs
-                </div> */}
+                <div className='blogs' id='blogs' ref={el => sectionRefs.current[4] = el}>
+                    <div>
+                        <ul className="blog-list">
+                            {
+                                posts.map(post => {
+                                    console.log('Post slug:', post.slug)
+                                    return (
+                                        <li key={post.slug} className="blog-list-item">
+                                            <Link to={`/blog/${post.slug}`} className="blog-link">
+                                                {post.title} - {post.date}
+                                            </Link>
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ul>
+                    </div>
+                </div>
            </div>
         </div>
 
