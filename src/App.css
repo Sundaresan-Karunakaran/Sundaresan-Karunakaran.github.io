@@ -7,6 +7,16 @@
   text-align: center;
 }
 
+html, body {
+  color: rgba(255, 255, 255, 0.87);
+  background: linear-gradient(
+    180deg,
+    #2a2a2a 0%,
+    #121212 100%
+  );
+}
+
+
 
 
 .logo {
@@ -110,7 +120,7 @@ code, pre {
 .subdiv{
   min-height: 100px;
   /* background: rgba(255, 255, 255, 0.1); */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.25); */
   backdrop-filter: blur(10px);
   border-radius: 8px;
   padding: 20px;
@@ -226,4 +236,113 @@ code, pre {
   color: #f50057;
   transform: scale(1.2);
   transform-origin: left center;
+}
+
+
+
+/* ========== Tablet (600px - 1024px) ========== */
+@media screen and (min-width: 601px) and (max-width: 1024px) {
+  #root {
+    max-width: 100%;
+    padding: 1.5rem;
+  }
+
+  .wrapper {
+    gap: 2rem;
+    padding: 0 1rem;
+  }
+
+  .sidebar {
+    width: 35%;
+    padding: 10px;
+  }
+
+  .main {
+    width: 60%;
+    gap: 1.5em;
+  }
+
+  .sidebar img.nav-link {
+    max-width: 220px;
+    height: auto;
+  }
+
+  body {
+    font-size: 18px;
+  }
+}
+
+/* ========== Phone (up to 600px) ========== */
+@media screen and (max-width: 600px) {
+  #root {
+    max-width: 100%;
+    padding: 1rem;
+  }
+
+  body {
+    padding: 2%;
+    font-size: 16px;
+  }
+
+  .skills,
+  [id="skills"] {
+    gap: 15px !important;
+    justify-content: center;
+  }
+
+  .wrapper {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    padding: 1rem;
+    padding-bottom: 2rem;
+    text-align: center;
+    align-items: center;
+    position: static;
+  }
+
+  .sidebar img.nav-link {
+    max-width: 200px;
+    height: auto;
+  }
+
+  .main {
+    width: 100%;
+    min-height: auto;
+    gap: 1.25em;
+  }
+
+  .introduction {
+    padding-bottom: 2%;
+    font-size: 1rem;
+  }
+
+  .subdiv {
+    padding: 1rem;
+  }
+
+  .icon {
+    font-size: 32px;
+  }
+
+  .blog-link {
+    font-size: 16px;
+  }
+
+  .blog-list-item::before {
+    font-size: 1.2em;
+  }
+}
+
+/* ========== Large desktop (optional) ========== */
+@media screen and (min-width: 1280px) {
+  #root {
+    max-width: 1280px;
+    padding: 2rem;
+  }
 }

@@ -22,7 +22,7 @@ const MainPage: React.FC = () => {
     useEffect(() => {
         const handleScroll = (event: Event) => {
             event.preventDefault();
-            const targetId = (event.target as HTMLAnchorElement).getAttribute('href')?.substring(1);
+            const targetId = (event.currentTarget as HTMLAnchorElement).getAttribute('href')?.substring(1);
             if (targetId) {
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
@@ -116,7 +116,7 @@ const MainPage: React.FC = () => {
                     <h3>Software Engineer</h3>
                     <h5>With a passion for anything computer</h5>
                 </div>
-                <img className="nav-link" src='/IMG_20240808_111841_731.jpg' alt='Sundaresan Karunakaran Photo' style={{borderRadius:'30%', paddingTop:'10%'}} width="300" height="400"/>
+                <img className="nav-link" src='/ProfilePic.jpeg' alt='Sundaresan Karunakaran Photo' style={{borderRadius:'60%', marginTop:'5%', marginLeft:'10%'}} width="300" height="350"/>
                 <div style={{display:'flex',flexDirection:'column', padding:'10%'}}>
                     <a href="#introduction"  className="nav-link">
                         <span>About me</span>
