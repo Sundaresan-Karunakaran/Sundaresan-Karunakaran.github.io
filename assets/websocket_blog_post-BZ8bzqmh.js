@@ -240,6 +240,6 @@ Found an error? Want to discuss these results? Reach out:
 
 ---
 
-*This blog post is based on my research paper "Serverless WebSockets: A Misnomer?" conducted at USI Lugano. All tests were performed using free tier offerings across all platforms to evaluate baseline performance accessible to developers without upfront financial commitment.*
+*This blog post is based on my personal research paper "Serverless WebSockets: A Misnomer?". All tests were performed using free tier offerings across all platforms to evaluate baseline performance accessible to developers without upfront financial commitment.*
 
 *Last updated: January 2026*`;export{e as default};
