@@ -236,6 +236,7 @@ Don't let marketing hype drive your architecture decisions. Sometimes the boring
 
 Found an error? Want to discuss these results? Reach out:
 - Email: karuns@usi.ch
+- Linkedin: [Sundaresan Karunakaran](https://www.linkedin.com/in/sundaresan-k-701465202/)
 - GitHub: [Sundaresan Karunakaran](https://github.com/Sundaresan-Karunakaran)
 
 ---
