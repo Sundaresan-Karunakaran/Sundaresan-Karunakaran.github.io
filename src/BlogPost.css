@@ -1,12 +1,15 @@
 /* Container for the whole blog post */
 .blog-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    min-height: 100vh;
-    font-family: 'Inter', sans-serif;
-    color: rgba(255, 255, 255, 0.87);
-  }
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
+  color: rgba(255, 255, 255, 0.87);
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
   
   /* Back link */
   .blog-back-link {
@@ -187,8 +190,12 @@
   /* Tables */
   .blog-content table {
     width: 100%;
+    max-width: 100%;
     border-collapse: collapse;
     margin: 1.5rem 0;
+    display: table;
+    table-layout: auto; /* Allow table to resize based on content */
+    box-sizing: border-box;
   }
   
   .blog-content table th,
@@ -196,12 +203,18 @@
     padding: 0.75rem;
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
+    word-wrap: break-word; /* Allow text to wrap */
+    overflow-wrap: break-word; /* Additional wrapping support */
+    hyphens: auto; /* Add hyphens for long words */
   }
   
   .blog-content table th {
     background-color: rgba(255, 255, 255, 0.05);
     font-weight: 500;
   }
+  
+
+
   
   /* Horizontal rules */
   .blog-content hr {
@@ -231,20 +244,119 @@
   /* Responsive design */
   @media screen and (max-width: 800px) {
     .blog-container {
-      padding: 1rem;
+        padding: 1rem;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+        overflow-x: hidden; 
     }
-  
+
     .blog-post {
-      padding: 1.5rem;
+        padding: 1.5rem;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
-  
+
     .blog-title {
-      font-size: 2rem;
+        font-size: 2rem;
     }
-  
+
     .blog-content {
-      font-size: 1rem;
+        font-size: 1rem;
+        width: 100%;
+        overflow-x: hidden; /* Prevent horizontal scroll on content */
+        max-width: 100%;
     }
+
+    /* Make tables horizontally scrollable */
+    .blog-content table {
+        display: block;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100%;
+        margin: 1.5rem 0;
+    }
+
+    .blog-content table thead,
+    .blog-content table tbody,
+    .blog-content table tr {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .blog-content table th,
+    .blog-content table td {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        min-width: 120px; /* Minimum width for readability */
+    }
+
+    /* For tables with 4 columns, ensure they can scroll */
+    .blog-content table {
+        min-width: max-content;
+    }
+}
+
+@media screen and (max-width: 600px) {
+  .blog-container {
+      padding: 0.75rem;
+      width: 100%;
+      max-width: 100%;
   }
+
+  .blog-post {
+      padding: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+  }
+
+  .blog-title {
+      font-size: 1.75rem;
+  }
+
+  .blog-content {
+      font-size: 0.95rem;
+  }
+
+  /* Enhanced table scrolling for small screens */
+  .blog-content table {
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+      margin: 1.25rem 0;
+      border-radius: 4px;
+  }
+
+  .blog-content table thead {
+      display: table-header-group;
+  }
+
+  .blog-content table tbody {
+      display: table-row-group;
+  }
+
+  .blog-content table tr {
+      display: table-row;
+  }
+
+  .blog-content table th,
+  .blog-content table td {
+      display: table-cell;
+      padding: 0.5rem 0.4rem;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      min-width: 100px;
+  }
+
+  /* Ensure 4-column tables can scroll properly */
+  .blog-content table {
+      min-width: 400px; /* Minimum width for 4 columns */
+  }
+}
   
   

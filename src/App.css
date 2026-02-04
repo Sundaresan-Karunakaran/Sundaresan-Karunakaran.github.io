@@ -173,7 +173,7 @@ code, pre {
 
 @media screen and (max-width: 800px) {
   .sidebar {
-    width: 90%; /* The width is 100%, when the viewport is 800px or smaller */
+    width: 90%;
     height: 100%;
     padding-bottom: 30%;
     display: flex;
@@ -181,21 +181,81 @@ code, pre {
     text-align: center;
     position: static;
     overflow-x: hidden;
+  }
 
+  /* Center all text elements in sidebar */
+  .sidebar > div:first-child {
+    text-align: center;
+    width: 100%;
   }
-  .wrapper{
+
+  .sidebar h2,
+  .sidebar h3,
+  .sidebar h5 {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Center the profile picture */
+  .sidebar img.nav-link {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    display: block;
+  }
+
+  /* Center navigation links container */
+  .sidebar > div[style*="flexDirection"] {
+    align-items: center;
+    text-align: center;
+  }
+
+  /* Center navigation links */
+  .sidebar .nav-link {
+    text-align: center;
+    display: block;
+    width: 100%;
+  }
+
+  .sidebar .nav-link span {
+    display: inline-block;
+  }
+
+  /* Center social media icons */
+  .sidebar > div[style*="justifyContent"] {
+    width: 100% !important;
+    justify-content: center !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .wrapper {
     flex-direction: column;
+    align-items: center;
   }
+
   .main {
     width: 100%;
     display: flex;
+    text-align: center;
   }
-  .nav-link{
+
+  /* Center main content sections */
+  .main > div {
+    text-align: center;
+  }
+
+  .introduction {
+    text-align: center;
+  }
+
+  .nav-link {
     transform-origin: center;
   }
-  .nav-link:hover{
+
+  .nav-link:hover {
     color: #f50057;
-    transform: scale(1.1)
+    transform: scale(1.1);
   }
 }
 
@@ -284,16 +344,11 @@ code, pre {
     font-size: 16px;
   }
 
-  .skills,
-  [id="skills"] {
-    gap: 15px !important;
-    justify-content: center;
-  }
-
   .wrapper {
     flex-direction: column;
     gap: 1.5rem;
     padding: 0 0.5rem;
+    align-items: center;
   }
 
   .sidebar {
@@ -306,24 +361,79 @@ code, pre {
     position: static;
   }
 
+  /* Ensure all sidebar content is centered */
+  .sidebar > div:first-child {
+    text-align: center;
+    width: 100%;
+  }
+
+  .sidebar h2,
+  .sidebar h3,
+  .sidebar h5 {
+    text-align: center;
+    margin: 0.5rem auto;
+  }
+
+  /* Center profile picture */
   .sidebar img.nav-link {
-    max-width: 200px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 1rem !important;
+    display: block;
+    max-width: 250px;
     height: auto;
+  }
+
+  /* Center navigation links */
+  .sidebar > div[style*="flexDirection"] {
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 5% !important;
+  }
+
+  .sidebar .nav-link {
+    text-align: center;
+    display: block;
+    width: 100%;
+    margin: 0.5rem 0;
+  }
+
+  /* Center social icons */
+  .sidebar > div[style*="justifyContent"] {
+    width: 100% !important;
+    justify-content: center !important;
+    margin: 1rem auto 0;
+    gap: 1.5rem;
   }
 
   .main {
     width: 100%;
     min-height: auto;
     gap: 1.25em;
+    text-align: center;
+  }
+
+  /* Center all main content */
+  .main > div {
+    text-align: center;
   }
 
   .introduction {
     padding-bottom: 2%;
     font-size: 1rem;
+    text-align: center;
   }
 
   .subdiv {
     padding: 1rem;
+    text-align: left; /* Keep subdiv content left-aligned for readability */
+  }
+
+  .skills,
+  [id="skills"] {
+    gap: 15px !important;
+    justify-content: center;
   }
 
   .icon {
@@ -338,6 +448,7 @@ code, pre {
     font-size: 1.2em;
   }
 }
+
 
 /* ========== Large desktop (optional) ========== */
 @media screen and (min-width: 1280px) {
