@@ -671,3 +671,18 @@ a:hover {
     font-weight: 500;
     line-height: 1.4;
 }
+
+@media (hover: none) and (pointer: coarse) {
+    * {
+        cursor: auto !important;
+    }
+
+    a,
+    button,
+    .hover-scale,
+    .hover-scale-card,
+    .skill-tag,
+    .secret-trigger {
+        cursor: pointer !important;
+    }
+}
