@@ -111,4 +111,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
         setTimeout(typeIntro, 500);
     }
+
+
+    // 5. Remove cursor for touch devices
+    const isTouchDevice = window.matchMedia("(hover: none) and (pointer: coarse)").matches;
+
+    if (isTouchDevice) {
+        const cursorGlow = document.getElementById('cursor-glow');
+        if (cursorGlow) {
+            cursorGlow.style.display = 'none';
+        }
+
+        document.documentElement.style.cursor = 'auto';
+
+        document.querySelectorAll('*').forEach(el => {
+            el.style.cursor = 'auto';
+        });
+    }
 });
