@@ -22,11 +22,12 @@ jobs:
 
       - name: Build Project (if applicable)
         run: |
+          echo "Hello boys!"
           
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
-          folder: dist 
+          folder: . 
           token: ${{ secrets.GITHUB_TOKEN }}
