@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serverless WebSockets: A Misnomer?</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .blog-container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+            position: relative;
+            z-index: 2;
+            overflow-x: hidden;
+            /* Hard cap against body overflow */
+        }
+
+        /* New Layout Styles for Sticky Sidebar */
+        .blog-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 4rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .blog-sidebar {
+            flex: 0 0 320px;
+            position: sticky;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .blog-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .blog-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 40, 40, 0.3);
+            border-radius: 4px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: rgba(25, 0, 0, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 40, 40, 0.15);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .blog-header {
+            text-align: left;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .blog-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .blog-header h4 {
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            word-wrap: break-word;
+        }
+
+        .blog-date {
+            color: var(--accent-1);
+            font-size: 0.9rem;
+            font-family: monospace;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .blog-content {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            max-width: 100%;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            box-sizing: border-box;
+            overflow-x: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .blog-content h2,
+        .blog-content h3 {
+            color: var(--text-primary);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .blog-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-content img,
+        .blog-content video,
+        .blog-content iframe {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .blog-content ul,
+        .blog-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-content a {
+            color: var(--accent-1);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            cursor: none;
+            word-break: break-all;
+        }
+
+        .blog-content a:hover {
+            border-color: var(--accent-1);
+            text-shadow: 0 0 8px rgba(255, 40, 40, 0.5);
+        }
+
+        .blog-content code {
+            background: rgba(255, 0, 0, 0.15);
+            color: #ff8888;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            word-break: break-word;
+        }
+
+        /* Ensure rigid scrollable bounds for pre and table */
+        .blog-content pre {
+            background: rgba(5, 5, 5, 0.8);
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 40, 40, 0.2);
+            box-sizing: border-box;
+        }
+
+        .blog-content pre code {
+            background: none;
+            color: #e2e8f0;
+            padding: 0;
+            word-break: normal;
+        }
+
+        .blog-content table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .blog-content th,
+        .blog-content td {
+            border: 1px solid rgba(255, 40, 40, 0.15);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .blog-content th {
+            background: rgba(25, 0, 0, 0.6);
+            color: var(--accent-1);
+            font-weight: 500;
+        }
+
+        .blog-content blockquote {
+            border-left: 3px solid var(--accent-1);
+            padding-left: 1.5rem;
+            margin-left: 0;
+            font-style: italic;
+            color: #94a3b8;
+            background: rgba(255, 40, 40, 0.05);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Media Queries for Mobile Responsiveness */
+        @media (max-width: 900px) {
+            .blog-layout {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .blog-sidebar {
+                flex: none;
+                width: 100%;
+                position: relative;
+                top: 0;
+                align-items: center;
+                text-align: center;
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .blog-header {
+                text-align: center;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor-glow" class="cursor-glow"></div>
+    <div class="fixed-bg"></div>
+    <main class="blog-container fade-up">
+
+        <!-- Removed inline padding: 3rem; so it doesn't override the mobile responsive padding defined in styles.css -->
+        <article class="glass-card blog-layout">
+
+            <div class="blog-sidebar">
+                <a href="index.html" class="back-btn">← Return to Main Terminal</a>
+                <header class="blog-header">
+                    <h1 class="gradient-text">Serverless WebSockets: A Misnomer?</h1>
+                    <h4>Why your real-time chat app might not belong on serverless</h4>
+                    <div style="margin-top: 1.5rem;"><time class="blog-date">2025-01-29</time></div>
+                </header>
+            </div>
+
+            <div class="blog-content">
+                <p>If you&#39;ve ever tried to build a real-time application (chat, notifications, live updates) on
+                    serverless platforms like AWS Lambda, Vercel, or Netlify, you&#39;ve probably wondered:
+                    <em>&quot;Can I use WebSockets here?&quot;</em>
+                </p>
+                <p>The marketing says yes. The architecture says... it&#39;s complicated.</p>
+                <p>I spent the last few months building the same, very simple chat application four different ways and
+                    stress testing each implementation. Just thought that those results are worth sharing.</p>
+                <h2>TL;DR - The Key Findings</h2>
+                <ul>
+                    <li><strong>&quot;Serverless WebSockets&quot; aren&#39;t actually serverless</strong> - they all
+                        require stateful, always-on infrastructure</li>
+                    <li><strong>AWS Lambda</strong>: 180× slower cold starts, 2% connection failure rate at 100 users
+                    </li>
+                    <li><strong>Vercel + Pusher</strong>: Cold starts ranging from 362ms to <strong>23.4
+                            seconds</strong> (64× variance)</li>
+                    <li><strong>Traditional EC2 server</strong>: Faster, cheaper ($7.50/month), 100% reliable</li>
+                    <li><strong>The verdict</strong>: For production real-time apps, skip the serverless solutions</li>
+                </ul>
+                <hr>
+                <h2>The Fundamental Problem</h2>
+                <p>WebSockets and serverless functions are architecturally incompatible:</p>
+                <h3>What WebSockets Need:</h3>
+                <ul>
+                    <li>Long-lived processes (hours or days)</li>
+                    <li>Persistent connections in memory</li>
+                    <li>Ability to send messages anytime</li>
+                    <li>Sub-50ms latency</li>
+                </ul>
+                <h3>What Serverless Provides:</h3>
+                <ul>
+                    <li>Short-lived functions (seconds to minutes)</li>
+                    <li>Stateless execution</li>
+                    <li>Event-driven invocation only</li>
+                    <li>Pay-per-execution billing</li>
+                </ul>
+                <p><strong>You can&#39;t hold a WebSocket connection open in a Lambda function that lives for 15 minutes
+                        max and costs money for idle time.</strong></p>
+                <p>So what do cloud providers do? They create workarounds. I&#39;ll list down 2 workarounds that I found
+                    different CSPs are doing plus the traditional way.</p>
+                <hr>
+                <h2>The Three Workarounds (And How They Actually Work)</h2>
+                <h3>1. AWS Lambda + API Gateway</h3>
+                <p><strong>The &quot;integrated&quot; approach</strong></p>
+                <p>AWS gives you API Gateway WebSockets, which maintains the actual persistent connections, while Lambda
+                    handles your business logic.</p>
+                <p><strong>How it works:</strong></p>
+                <pre><code>Client → API Gateway (holds WebSocket) → Triggers Lambda
+Lambda → DynamoDB (stores connection IDs)
+Lambda → API Gateway Management API → Client
+</code></pre>
+                <p><strong>What they don&#39;t tell you:</strong></p>
+                <ul>
+                    <li>API Gateway isn&#39;t serverless—it runs 24/7 and charges per connection-minute</li>
+                    <li>Every message requires 3 network hops</li>
+                    <li>You&#39;re managing 3+ services: API Gateway, Lambda, DynamoDB, IAM permissions</li>
+                </ul>
+                <p><strong>The result:</strong> Architectural complexity that makes things a lot more complicated.</p>
+                <hr>
+                <h3>2. Vercel (also Netlify) Functions + Pusher</h3>
+                <p><strong>The &quot;delegated&quot; approach</strong></p>
+                <p>Vercel doesn&#39;t support WebSockets at all. Their official docs tell you to use Pusher (a
+                    third-party service). Netlify also uses a delegated approach where they recommend using Ably. </p>
+                <p><strong>How it works:</strong></p>
+                <pre><code>Client → Vercel Function (HTTP POST) → Pusher API
+Pusher → Client (via WebSocket)
+</code></pre>
+                <p><strong>What they don&#39;t tell you:</strong></p>
+                <ul>
+                    <li>You&#39;re paying two companies (Vercel + Pusher)</li>
+                    <li>Free tier has undocumented rate limits that silently drop messages</li>
+                    <li>Vendor lock-in to Pusher&#39;s proprietary APIs</li>
+                </ul>
+                <p><strong>The result:</strong> Simple to set up, catastrophic to scale.</p>
+                <hr>
+                <h3>3. Traditional Node.js Server on EC2</h3>
+                <p><strong>The &quot;boring&quot; approach</strong></p>
+                <p>A simple Node.js server with the <code>ws</code> library running on a $7.50/month EC2 t3.micro
+                    instance.</p>
+                <p><strong>How it works:</strong></p>
+                <pre><code>Client ←→ Server (that&#39;s it)
+</code></pre>
+                <p><strong>What they do tell you:</strong></p>
+                <ul>
+                    <li>You have to manage a server (security updates, monitoring)</li>
+                    <li>No automatic scaling</li>
+                    <li>Fixed monthly cost</li>
+                </ul>
+                <p><strong>The result:</strong> Simple, fast, reliable, cheap.</p>
+                <hr>
+                <h2>The Performance Tests</h2>
+                <p>I built the exact same real-time chat app four times and load-tested each with 10, 50, and 100
+                    concurrent users. Here&#39;s what happened:</p>
+                <h3>Cold Start Horror Show</h3>
+                <p><strong>First message latency (10 connections):</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Cold Start</th>
+                            <th>vs. EC2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EC2</td>
+                            <td>6.84ms</td>
+                            <td>1× (baseline)</td>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>2,133ms</td>
+                            <td><strong>180× slower</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Vercel+Pusher (best)</td>
+                            <td>362ms</td>
+                            <td>27× slower</td>
+                        </tr>
+                        <tr>
+                            <td>Vercel+Pusher (worst)</td>
+                            <td><strong>23,399ms</strong></td>
+                            <td><strong>3,420× slower</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>As you can see, in the worst case, Vercel + Pusher took <strong>23.4 seconds</strong> to deliver the
+                    first message which is unacceptable in real-time application.</p>
+                <h3>Message Latency (Average Round-Trip)</h3>
+                <p><strong>10 concurrent connections:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Avg Latency</th>
+                            <th>vs. EC2</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EC2</td>
+                            <td>24ms</td>
+                            <td>1×</td>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>1,155ms</td>
+                            <td><strong>47× slower</strong></td>
+                        </tr>
+                        <tr>
+                            <td>Vercel+Pusher</td>
+                            <td>161ms - 2,561ms</td>
+                            <td><strong>6.6-105× slower</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <h3>Failure rate</h3>
+                <p><strong>100 concurrent connections, 10,000 messages:</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Connection Success</th>
+                            <th>Messages Delivered</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>EC2</td>
+                            <td>100%</td>
+                            <td>100%</td>
+                            <td>Zero failures</td>
+                        </tr>
+                        <tr>
+                            <td>Lambda</td>
+                            <td>98%</td>
+                            <td>98%</td>
+                            <td>2% failed with HTTP 500</td>
+                        </tr>
+                        <tr>
+                            <td>Vercel+Pusher</td>
+                            <td>100%</td>
+                            <td><strong>9-11%</strong></td>
+                            <td>90% silently dropped!</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Let me emphasize that Vercel + Pusher result: <strong>All connections succeeded, but 9 out of 10
+                        messages were silently dropped with no error messages. This is due to the limitations of free
+                        tier. I believe that in the Paid tiers, this won&#39;t be an issue</strong></p>
+                <hr>
+                <h2>The Cost Reality Check</h2>
+                <p>Let&#39;s price out a realistic scenario: <strong>100 users connected for 8 hours/day, sending 50
+                        messages each.</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Monthly Cost</th>
+                            <th>Performance</th>
+                            <th>Reliability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>EC2 t3.micro</strong></td>
+                            <td><strong>$7.50</strong></td>
+                            <td>Fast</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Lambda + API Gateway</strong></td>
+                            <td>$5.64-8.64</td>
+                            <td>1.8× slower</td>
+                            <td>98%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vercel + Pusher (free)</strong></td>
+                            <td>$0*</td>
+                            <td>Unpredictable</td>
+                            <td>10%**</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Vercel + Pusher (paid)</strong></td>
+                            <td>$49+</td>
+                            <td>Good</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Netlify + Ably</strong></td>
+                            <td>$29+</td>
+                            <td>Good</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>* Only works for tiny scale<br>** 90% message loss on free tier</p>
+                <p><strong>The &quot;serverless&quot; promise of lower costs evaporates.</strong> Lambda costs almost as
+                    much as EC2 while performing worse. Third-party services cost 4-53× more.</p>
+                <hr>
+                <h2>When Should You Actually Use Each Approach?</h2>
+                <h3>Use Traditional Servers (EC2, VPS, Railway, Fly.io) When:</h3>
+                <ul>
+                    <li>Building any production real-time application </li>
+                    <li>Latency matters (gaming, trading, live collaboration) </li>
+                    <li>Reliability is critical </li>
+                    <li>You want predictable costs </li>
+                    <li>You value simplicity</li>
+                </ul>
+                <p><strong>This is usually what developers want.</strong></p>
+                <h3>Use AWS Lambda + API Gateway when:</h3>
+                <ul>
+                    <li>Traffic is extremely spiky (Black Friday-style) </li>
+                    <li>You can tolerate 200ms+ latency </li>
+                    <li>2-5% connection failures are acceptable </li>
+                    <li>Your team is already all-in on AWS</li>
+                </ul>
+                <p><strong>This is rarely the case. But who knows? Maybe you&#39;re hosting an app that sees sudden
+                        spikes. Then maybe this could be for you</strong></p>
+                <h3>Use Vercel/Netlify + Pusher/Ably when:</h3>
+                <ul>
+                    <li>Prototyping only (use paid tiers for production) </li>
+                    <li>You&#39;re okay with 4-53× higher costs </li>
+                    <li>Vendor lock-in is acceptable </li>
+                    <li>You have budget for enterprise support</li>
+                </ul>
+                <p><strong>In my opinion, this is not recommended at all. Only do it for experimental or educational
+                        purposes.</strong></p>
+                <hr>
+                <h2>The Marketing vs. Reality Gap</h2>
+                <p>Cloud providers market &quot;serverless WebSockets&quot; as:</p>
+                <ul>
+                    <li>Infinitely scalable</li>
+                    <li>Pay only for what you use</li>
+                    <li>Zero infrastructure management</li>
+                    <li>Better than traditional servers</li>
+                </ul>
+                <p><strong>The reality:</strong></p>
+                <ul>
+                    <li>Requires stateful infrastructure (API Gateway, Pusher, Ably)</li>
+                    <li>Costs as much or more than traditional servers</li>
+                    <li>Manages 2-3× more services</li>
+                    <li>Slower, less reliable, more complex</li>
+                </ul>
+                <p>The term &quot;serverless WebSockets&quot; is fundamentally misleading. You&#39;re not eliminating
+                    servers—you&#39;re just using someone else&#39;s servers and calling them via HTTP.</p>
+                <hr>
+                <h2>The Bottom Line</h2>
+                <p>After building and testing the same application four different ways, the winner is clear:</p>
+                <p><strong>Traditional WebSocket servers are faster, cheaper, more reliable, and simpler than any
+                        &quot;serverless&quot; alternative.</strong></p>
+                <p>The serverless revolution is real and valuable - for stateless HTTP APIs, background jobs, and data
+                    processing. But for real-time, stateful, persistent-connection protocols like WebSockets, serverless
+                    is a square peg in a round hole.</p>
+                <p>Don&#39;t let marketing hype drive your architecture decisions. Sometimes the boring solution is
+                    boring because it just works!</p>
+                <hr>
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><strong>Full Research Paper</strong>: <a href="/Serverless_websockets.pdf">Link to PDF</a></li>
+                </ul>
+                <h2>Questions or Feedback?</h2>
+                <p>Found an error? Want to discuss these results? Reach out:</p>
+                <ul>
+                    <li>Email: <a href="mailto:karuns@usi.ch">karuns@usi.ch</a></li>
+                    <li>Linkedin: <a href="https://www.linkedin.com/in/sundaresan-k-701465202/">Sundaresan
+                            Karunakaran</a></li>
+                    <li>GitHub: <a href="https://github.com/Sundaresan-Karunakaran">Sundaresan Karunakaran</a></li>
+                </ul>
+                <hr>
+                <p><em>This blog post is based on my personal research paper &quot;Serverless WebSockets: A
+                        Misnomer?&quot;. All tests were performed using free tier offerings across all platforms to
+                        evaluate baseline performance accessible to developers without upfront financial
+                        commitment.</em></p>
+                <p><em>Last updated: January 2026</em></p>
+
+            </div>
+
+        </article>
+    </main>
+    <script src="../Scripts/main.js"></script>
+</body>
+
+</html>
