@@ -22,8 +22,7 @@ jobs:
 
       - name: Build Project (if applicable)
         run: |
-          npm install
-          npm run build  # Change this depending on your project
+          
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
