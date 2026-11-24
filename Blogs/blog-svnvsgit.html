@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVN vs Git: Why Going Back to SVN Felt Like Time Travel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Outfit:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <style>
+        .blog-container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 100px 20px 50px;
+            position: relative;
+            z-index: 2;
+            overflow-x: hidden;
+        }
+
+        /* Layout Styles for Sticky Sidebar */
+        .blog-layout {
+            display: flex;
+            align-items: flex-start;
+            gap: 4rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .blog-sidebar {
+            flex: 0 0 320px;
+            position: sticky;
+            top: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .blog-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .blog-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 40, 40, 0.3);
+            border-radius: 4px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            background: rgba(25, 0, 0, 0.4);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 40, 40, 0.15);
+        }
+
+        .back-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-1);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .blog-header {
+            text-align: left;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+
+        .blog-header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+            word-wrap: break-word;
+        }
+
+        .blog-header h4 {
+            color: var(--text-secondary);
+            font-weight: 400;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            word-wrap: break-word;
+        }
+
+        .blog-date {
+            color: var(--accent-1);
+            font-size: 0.9rem;
+            font-family: monospace;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .blog-content {
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+            max-width: 100%;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            box-sizing: border-box;
+            overflow-x: hidden;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .blog-content h2,
+        .blog-content h3 {
+            color: var(--text-primary);
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+
+        .blog-content p {
+            margin-bottom: 1.5rem;
+        }
+
+        .blog-content img,
+        .blog-content video,
+        .blog-content iframe {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .blog-content ul,
+        .blog-content ol {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .blog-content li {
+            margin-bottom: 0.5rem;
+        }
+
+        .blog-content a {
+            color: var(--accent-1);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s ease;
+            cursor: none;
+            word-break: break-all;
+        }
+
+        .blog-content a:hover {
+            border-color: var(--accent-1);
+            text-shadow: 0 0 8px rgba(255, 40, 40, 0.5);
+        }
+
+        .blog-content code {
+            background: rgba(255, 0, 0, 0.15);
+            color: #ff8888;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+            word-break: break-word;
+        }
+
+        .blog-content pre {
+            background: rgba(5, 5, 5, 0.8);
+            padding: 1.5rem;
+            border-radius: 8px;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 40, 40, 0.2);
+            box-sizing: border-box;
+        }
+
+        .blog-content pre code {
+            background: none;
+            color: #e2e8f0;
+            padding: 0;
+            word-break: normal;
+        }
+
+        .blog-content table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1.5rem;
+            display: block;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .blog-content th,
+        .blog-content td {
+            border: 1px solid rgba(255, 40, 40, 0.15);
+            padding: 0.75rem;
+            text-align: left;
+        }
+
+        .blog-content th {
+            background: rgba(25, 0, 0, 0.6);
+            color: var(--accent-1);
+            font-weight: 500;
+        }
+
+        .blog-content blockquote {
+            border-left: 3px solid var(--accent-1);
+            padding-left: 1.5rem;
+            margin-left: 0;
+            font-style: italic;
+            color: #94a3b8;
+            background: rgba(255, 40, 40, 0.05);
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        /* Media Queries*/
+        @media (max-width: 900px) {
+            .blog-layout {
+                flex-direction: column;
+                gap: 2rem;
+            }
+
+            .blog-sidebar {
+                flex: none;
+                width: 100%;
+                position: relative;
+                top: 0;
+                align-items: center;
+                text-align: center;
+                max-height: none;
+                overflow-y: visible;
+            }
+
+            .blog-header {
+                text-align: center;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="cursor-glow" class="cursor-glow"></div>
+    <div class="fixed-bg"></div>
+    <main class="blog-container fade-up">
+
+        <article class="glass-card blog-layout">
+
+            <div class="blog-sidebar">
+                <a href="../index.html" class="back-btn">← Return to Main Terminal</a>
+                <header class="blog-header">
+                    <h1 class="gradient-text">SVN vs Git: Why Going Back to SVN Felt Like Time Travel</h1>
+                    <h4>A software engineer's take on version control after a return trip to TortoiseSVN</h4>
+                    <div style="margin-top: 1.5rem;"><time class="blog-date">2026-11-24</time></div>
+                </header>
+            </div>
+
+            <div class="blog-content">
+                <p>Recently I got the chance to work with <strong>Subversion (SVN)</strong> through
+                    <strong>TortoiseSVN</strong> again, for the first time since my previous job. I use <strong>Git</strong>
+                    almost every day, so the switch back was... an experience. I can't really express how
+                    <em>archaic</em> it felt.</p>
+                <p>So I started thinking: <em>is SVN actually bad, or have I just been spoiled by Git?</em> That led me
+                    to write this post, a fair look at both, from someone who ships code for a living.</p>
+                <hr>
+                <h2>TL;DR - The Key Takeaways</h2>
+                <ul>
+                    <li><strong>SVN is centralized, Git is distributed</strong> — and that one difference changes
+                        almost everything about the daily workflow.</li>
+                    <li><strong>Git commits are local, fast, and cheap</strong> — SVN commits go straight to the
+                        server, so you hesitate before every one.</li>
+                    <li><strong>Branching and merging is where Git wins big</strong> — in SVN, branches are folder
+                        copies and merges feel like a chore.</li>
+                    <li><strong>SVN is not useless</strong> — it still has real strengths with large binary files,
+                        partial checkouts, and path-based permissions.</li>
+                    <li><strong>My verdict:</strong> for most software teams, Git is the better default. SVN isn't
+                        wrong, it just feels like it belongs to another era.</li>
+                </ul>
+                <hr>
+                <h2>What SVN Really Is</h2>
+                <p>SVN follows a <strong>client-server model</strong>. There is one central repository, and every
+                    developer checks out a working copy from it. Your changes only "exist" in the history once they
+                    are committed to that central server.</p>
+                <h3>The Mental Model</h3>
+                <ul>
+                    <li><strong>One source of truth:</strong> the server holds the full history, your machine holds a
+                        snapshot.</li>
+                    <li><strong>Global revision numbers:</strong> every commit bumps a single number for the whole
+                        repo (r1042, r1043, ...).</li>
+                    <li><strong>Atomic commits:</strong> a commit either fully succeeds or not at all, which was a big
+                        step up from CVS.</li>
+                </ul>
+                <p>It's simple, and honestly, for its time it was great. The problem is how much the world has moved
+                    on since.</p>
+                <hr>
+                <h2>The Core Difference: Centralized vs Distributed</h2>
+                <p>With Git, <strong>every clone is a full repository</strong> — complete history, all branches,
+                    everything. You can commit, branch, diff, and browse history on a plane with no Wi-Fi. With SVN,
+                    most of those operations need a round trip to the server.</p>
+                <p>That sounds like a small technical detail, but it shapes your behavior. In Git you commit early and
+                    often because commits are private and free. In SVN, every commit is public and immediate, so you
+                    end up batching a day's work into one big commit and hoping it doesn't break the build for
+                    everyone.</p>
+                <hr>
+                <h2>Day-to-Day Workflow</h2>
+                <p>Here is roughly what a basic feature workflow looks like in each:</p>
+                <h3>SVN</h3>
+                <pre><code>svn update
+# ...make changes...
+svn commit -m "Add login validation"</code></pre>
+                <h3>Git</h3>
+                <pre><code>git switch -c feature/login-validation
+# ...make changes...
+git add .
+git commit -m "Add login validation"
+git push origin feature/login-validation</code></pre>
+                <p>On paper, SVN looks shorter. In practice, Git's extra steps give you something SVN never does:
+                    <strong>a safe place to work</strong>. Your branch is yours, your commits can be amended, split, or
+                    squashed before anyone else sees them, and a mistake is almost always recoverable.</p>
+                <p>In SVN, if someone commits before you, you get the dreaded <em>"out of date"</em> error and have to
+                    update (and possibly resolve conflicts) before you can even commit your own work.</p>
+                <hr>
+                <h2>Branching and Merging</h2>
+                <p>This is the part that hurt the most.</p>
+                <h3>In SVN</h3>
+                <ul>
+                    <li>A branch is a <strong>copy of a directory</strong> in the repo (<code>/branches/my-feature</code>).
+                        Cheap on the server, but heavy on the mindset.</li>
+                    <li>Switching means <code>svn switch</code>, and merging back means tracking what has already been
+                        merged.</li>
+                    <li>Tree conflicts (renamed or moved files) can turn a simple merge into an afternoon of pain.</li>
+                </ul>
+                <h3>In Git</h3>
+                <ul>
+                    <li>A branch is a <strong>lightweight pointer</strong>. Creating one takes milliseconds.</li>
+                    <li>Merging and rebasing are first-class operations with well-understood behavior.</li>
+                    <li>Feature branches, pull requests, and code review are the default way of working.</li>
+                </ul>
+                <p>In Git, I branch without thinking about it. In SVN, I caught myself avoiding branches because the
+                    cost felt too high. When a tool makes you avoid good practices, that's a design problem.</p>
+                <hr>
+                <h2>The Staging Area, Stash, and Other Things I Missed</h2>
+                <p>Going back to SVN, I kept reaching for tools that simply weren't there:</p>
+                <ul>
+                    <li><strong>Staging area:</strong> in Git I can commit only the changes I want. In SVN, it's
+                        basically "commit everything you ticked", with no partial-hunk staging.</li>
+                    <li><strong>Stash:</strong> need to switch context quickly? <code>git stash</code> and move on.
+                        In SVN you're juggling patch files.</li>
+                    <li><strong>Interactive rebase:</strong> cleaning up messy history before sharing it is a Git
+                        superpower.</li>
+                    <li><strong>Bisect:</strong> <code>git bisect</code> hunts down the commit that introduced a bug
+                        automatically.</li>
+                    <li><strong>Local history:</strong> <code>git log</code>, <code>git blame</code> and
+                        <code>git diff</code> are instant. In SVN they depend on the server.</li>
+                </ul>
+                <hr>
+                <h2>The TortoiseSVN Experience</h2>
+                <p>To be fair to TortoiseSVN: it's a genuinely well-made tool. The Windows Explorer integration, the
+                    overlay icons showing modified or conflicted files, and the right-click menus are polished and
+                    approachable. If you're someone who doesn't live in a terminal, it makes SVN far less intimidating.</p>
+                <p>But a nice UI can't hide the workflow underneath. You still wait on the network for operations that
+                    should be instant, you still can't commit offline, and you still end up with a working copy full of
+                    hidden metadata. It felt like driving a beautifully restored classic car: lovely to look at, but
+                    I'd really rather have the modern one for my daily commute.</p>
+                <hr>
+                <h2>The Ecosystem Gap</h2>
+                <p>Git didn't win only because of its design. It won because of everything built <em>around</em> it:</p>
+                <ul>
+                    <li><strong>Hosting platforms</strong> like GitHub, GitLab, and Bitbucket</li>
+                    <li><strong>Pull requests and code review</strong> as a standard workflow</li>
+                    <li><strong>CI/CD integration</strong> that assumes Git out of the box</li>
+                    <li><strong>Community knowledge</strong> — almost any Git problem has a Stack Overflow answer</li>
+                    <li><strong>Hiring and onboarding</strong> — most developers already know Git</li>
+                </ul>
+                <p>SVN tooling exists, but it feels like an afterthought in most modern pipelines.</p>
+                <hr>
+                <h2>Where SVN Still Makes Sense</h2>
+                <p>I don't want this to be pure Git fan fiction. SVN still has real advantages in some situations:</p>
+                <ul>
+                    <li><strong>Large binary files:</strong> game assets, design files, and CAD models don't bloat
+                        every clone's history, and file locking prevents unmergeable conflicts. This is the reason why I had to use SVN this time.</li> 
+                    <li><strong>Partial checkouts:</strong> you can check out just one folder of a huge repo instead
+                        of everything.</li>
+                    <li><strong>Path-based access control:</strong> easy to restrict who can see or edit specific
+                        directories.</li>
+                    <li><strong>Simplicity:</strong> a smaller command set and a simpler mental model for
+                        non-developers.</li>
+                    <li><strong>Existing legacy systems:</strong> sometimes the company just uses SVN, and migrating
+                        isn't worth the risk.</li>
+                </ul>
+                <hr>
+                <h2>Side-by-Side Comparison</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>SVN</th>
+                            <th>Git</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Architecture</td>
+                            <td>Centralized</td>
+                            <td>Distributed</td>
+                        </tr>
+                        <tr>
+                            <td>Offline work</td>
+                            <td>Very limited</td>
+                            <td>Full history and commits locally</td>
+                        </tr>
+                        <tr>
+                            <td>Branching</td>
+                            <td>Directory copies, heavier</td>
+                            <td>Lightweight and instant</td>
+                        </tr>
+                        <tr>
+                            <td>Merging</td>
+                            <td>Painful, tree conflicts</td>
+                            <td>Mature, well-tooled</td>
+                        </tr>
+                        <tr>
+                            <td>Staging area</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Large binaries</td>
+                            <td>Handles well</td>
+                            <td>Needs Git LFS</td>
+                        </tr>
+                        <tr>
+                            <td>Partial checkout</td>
+                            <td>Natural</td>
+                            <td>Possible, but less natural</td>
+                        </tr>
+                        <tr>
+                            <td>Ecosystem</td>
+                            <td>Shrinking</td>
+                            <td>Industry standard</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr>
+                <h2>My Verdict</h2>
+                <p>After going back to SVN, my appreciation for Git went up a lot. It respects the way developers
+                    actually work: in small steps, with lots of experiments, and with the freedom to undo.</p>
+                <p>SVN feels like it was designed around the idea that <strong>the server is precious and the developer
+                        should be careful</strong>. Git feels designed around the idea that <strong>the developer
+                        should be free to experiment and the tool should have their back</strong>. I know which one I
+                    want in my daily workflow.</p>
+                <p>That said, if your team works mostly with large binary assets or needs strict directory-level
+                    control, SVN is still a legitimate choice. Just go in knowing the trade-offs!!</p>
+                <hr>
+                <h2>Additional Resources</h2>
+                <ul>
+                    <li><a href="https://git-scm.com/book">Pro Git Book</a></li>
+                    <li><a href="https://subversion.apache.org/">Apache Subversion</a></li>
+                    <li><a href="https://tortoisesvn.net/">TortoiseSVN</a></li>
+                </ul>
+                <hr>
+                <h2>Questions or Feedback?</h2>
+                <p>If you're a developer who has made the move from SVN to Git (or the other way around), reach out
+                    via:</p>
+                <ul>
+                    <li>Email: <a href="mailto:karuns@usi.ch">karuns@usi.ch</a></li>
+                    <li>Linkedin: <a href="https://www.linkedin.com/in/sundaresan-k-701465202/">Sundaresan
+                            Karunakaran</a></li>
+                    <li>GitHub: <a href="https://github.com/Sundaresan-Karunakaran">Sundaresan Karunakaran</a></li>
+                </ul>
+                <p>I'd love to hear <strong>your version control horror stories</strong></p>
+                <hr>
+                <p><em>Last updated: November 2026</em></p>
+
+            </div>
+
+        </article>
+    </main>
+    <script src="../Scripts/main.js"></script>
+</body>
+
+</html>
